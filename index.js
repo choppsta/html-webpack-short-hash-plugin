@@ -25,4 +25,4 @@ class HtmlShortHashPlugin {
     }
 }
 
-export default HtmlShortHashPlugin;
+module.exports = HtmlShortHashPlugin;
