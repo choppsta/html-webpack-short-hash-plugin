@@ -1,0 +1,16 @@
+{
+  "name": "html-webpack-short-hash-plugin",
+  "description": "shorten the hashes added to file urls by the html webpack plugin",
+  "version": "0.1.0",
+  "license": "MIT",
+  "author": "Choppsta",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/choppsta/html-webpack-short-hash-plugin.git"
+  },
+  "bugs": {
+    "url": "https://github.com/choppsta/html-webpack-short-hash-plugin/issues"
+  },
+  "homepage": "https://github.com/choppsta/html-webpack-short-hash-plugin",
+  "main": "index.js"
+}
