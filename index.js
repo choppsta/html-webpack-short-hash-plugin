@@ -19,6 +19,8 @@ class HtmlShortHashPlugin {
                         htmlPluginData.assets[key][index] = path+'?'+hash.substr(0, self.data.length);
                     }.bind(this));
                 });
+
+                if (!callback) return Promise.resolve(htmlPluginData); // webpack 4
                 callback(null, htmlPluginData);
             });
         });
