@@ -1,30 +1,29 @@
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+
 class HtmlShortHashPlugin {
     constructor(options) {
-        this.data = Object.assign({
-            length: 6 // the desired length of the hash
-        }, options);
+        this.cnf = {
+            length: 6, // the desired length of the hash
+            ...options
+        };
     }
 
     apply(compiler) {
-        var self = this;
-        compiler.plugin('compilation', function(compilation) {
-            // html-webpack-plugin-alter-asset-tags
-            // html-webpack-plugin-after-html-processing
-            compilation.plugin('html-webpack-plugin-before-html-processing', function(htmlPluginData, callback) {
-                ['css', 'js'].forEach(function(key) {
-                    if (!htmlPluginData.assets[key]) return;
-                    htmlPluginData.assets[key].forEach(function(url, index) {
-                        if (url.indexOf('?') === -1) return;
-                        var [path, hash] = url.split('?');
-                        htmlPluginData.assets[key][index] = path+'?'+hash.substr(0, self.data.length);
-                    }.bind(this));
+        compiler.hooks.compilation.tap('HtmlShortHashPlugin', (compilation) => {
+            HtmlWebpackPlugin.getHooks(compilation).alterAssetTags.tapAsync('HtmlShortHashPlugin', (data, cb) => {
+                Object.keys(data.assetTags).forEach(key => {
+                    data.assetTags[key].forEach(tag => {
+                        const attr = tag.attributes && tag.attributes.src ? 'src' : (tag.attributes && tag.attributes.href && 'href');
+                        if (!attr || !tag.attributes[attr].includes('?')) return;
+                        const [path, hash] = tag.attributes[attr].split('?');
+                        tag.attributes[attr] = path+'?'+hash.substr(0, this.cnf.length);
+                    });
                 });
 
-                if (!callback) return Promise.resolve(htmlPluginData); // webpack 4
-                callback(null, htmlPluginData);
+                cb(null, data);
             });
         });
     }
 }
 
-module.exports = HtmlShortHashPlugin;
+module.exports = HtmlShortHashPlugin
